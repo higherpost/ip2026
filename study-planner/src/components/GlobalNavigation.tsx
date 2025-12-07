@@ -3,8 +3,13 @@
 import Link from "next/link";
 import { Home } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { usePathname } from "next/navigation";
 
 export default function GlobalNavigation() {
+    const pathname = usePathname();
+
+    if (pathname === "/login") return null;
+
     return (
         <div className="fixed top-4 right-4 z-[100] flex items-center gap-3">
             <Link
