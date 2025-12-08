@@ -26,65 +26,6 @@ interface QuizItem {
 }
 
 interface HistoryItem {
-    year: string;
-    event: string;
-    description?: string;
-}
-
-// --- Configuration ---
-const RAPID_API_KEY = "78307967c577440ea972024a7bce20c4"; // Using the key provided by the user
-const RAPID_API_HOST = "current-affairs-of-india.p.rapidapi.com";
-const BASE_URL = `https://${RAPID_API_HOST}`;
-
-// --- Components ---
-
-function NewsList({ endpoint, type }: { endpoint: string, type: "recent" | "international" }) {
-    const [data, setData] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    const fetchData = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const res = await fetch(`${BASE_URL}${endpoint}`, {
-                headers: {
-                    'X-RapidAPI-Key': RAPID_API_KEY,
-                    'X-RapidAPI-Host': RAPID_API_HOST
-                }
-            });
-            if (!res.ok) throw new Error(`Failed to fetch ${type} news`);
-            const json = await res.json();
-            // The API might return an array directly or an object. Handling generic response.
-            setData(Array.isArray(json) ? json : json.data || []);
-        } catch (err: any) {
-            setError(err.message || "An error occurred");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => { fetchData(); }, [endpoint]);
-
-    if (loading) return <div className="flex justify-center p-10"><Loader2 className="animate-spin text-blue-500 w-8 h-8" /></div>;
-    if (error) return <ErrorDisplay message={error} retry={fetchData} />;
-
-    // Fallback if empty
-    if (data.length === 0) return <div className="text-center p-10 text-zinc-500">No updates found for today.</div>;
-
-    return (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {data.map((item, idx) => (
-                <div key={idx} className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-zinc-100 dark:border-zinc-800 p-6 hover:shadow-md transition-all">
-                    <h3 className="font-bold text-lg text-zinc-800 dark:text-zinc-100 mb-2">{item.title || item.news || "Update"}</h3>
-                    <p className="text-zinc-600 dark:text-zinc-400 text-sm mb-4">{item.description || item.summary}</p>
-                    {/* Assuming the API might return a source or date, display if available */}
-                    {item.date && <div className="text-xs text-zinc-400 font-medium">{item.date}</div>}
-                </div>
-            ))}
-        </div>
-    );
-}
 
 function QuizSection() {
     const [questions, setQuestions] = useState<any[]>([]);
@@ -309,8 +250,8 @@ export default function CurrentAffairsPage() {
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${activeTab === tab.id
-                                            ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-md transform scale-105"
-                                            : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                                        ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-md transform scale-105"
+                                        : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
                                         }`}
                                 >
                                     <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? "" : tab.color}`} />
