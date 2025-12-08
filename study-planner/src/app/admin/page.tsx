@@ -241,7 +241,7 @@ export default function AdminDashboard() {
                                 <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Role</label>
                                 <select
                                     value={editingUser.role}
-                                    // @ts-expect-error - role type checking
+
                                     onChange={(e) => setEditingUser({ ...editingUser, role: e.target.value as 'user' | 'admin' })}
                                     className="w-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500/20"
                                 >
