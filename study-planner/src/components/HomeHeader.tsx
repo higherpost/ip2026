@@ -36,13 +36,9 @@ export default function HomeHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
                             </Link>
 
                             <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                                <Link href="#" className="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400">
-                                    Exams <ChevronDown className="w-3 h-3" />
-                                </Link>
-                                <Link href="#" className="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400">
-                                    SuperCoaching <ChevronDown className="w-3 h-3" />
-                                </Link>
-                                <Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Test Series</Link>
+                                <Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Current Affairs</Link>
+                                <Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Postal Updates</Link>
+                                <Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Syllabus</Link>
 
                                 {/* Pass Dropdown */}
                                 <div className="relative group">
