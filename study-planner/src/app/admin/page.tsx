@@ -201,7 +201,7 @@ export default function AdminDashboard() {
 
                         {filteredUsers.length === 0 && (
                             <div className="p-12 text-center text-zinc-500 dark:text-zinc-400">
-                                No users found matching "{search}"
+                                No users found matching &quot;{search}&quot;
                             </div>
                         )}
                     </div>
@@ -214,7 +214,7 @@ export default function AdminDashboard() {
                     <DialogHeader>
                         <DialogTitle>Edit User</DialogTitle>
                         <DialogDescription>
-                            Make changes to user profile and role here. Click save when you're done.
+                            Make changes to user profile and role here. Click save when you&apos;re done.
                         </DialogDescription>
                     </DialogHeader>
                     {editingUser && (
