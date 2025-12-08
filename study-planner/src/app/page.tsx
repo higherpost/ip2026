@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Check, Smartphone, Mail, MapPin, Phone, ArrowRight, Star, Youtube, Instagram, Twitter, Facebook, MessageCircle } from "lucide-react";
 import { redirect } from "next/navigation";
 import HomeHeader from "@/components/HomeHeader";
+import ContactForm from "@/components/ContactForm";
 
 export default async function Home() {
   const cookieStore = await cookies();
@@ -19,11 +20,11 @@ export default async function Home() {
       {/* 2. Hero Section */}
       <section className="pt-16 pb-12 text-center px-4">
         <h1 className="text-3xl md:text-5xl font-extrabold text-blue-600 dark:text-blue-400 mb-4">
-          Welcome to Vidyālaya Academy
+          Step Into Vidyālaya Academy – Let’s Level Up Together
         </h1>
 
         <p className="text-zinc-600 dark:text-zinc-300 text-xl max-w-3xl mx-auto">
-          Most Trustworthy Study Platform for Preparation of All Limited Departmental Competition Exams
+          Prepare Smart. Progress Fast. Get Promoted.
         </p>
       </section>
 
@@ -56,11 +57,10 @@ export default async function Home() {
       <section className="bg-sky-50 dark:bg-sky-900/10 py-20 mb-20">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-5xl font-extrabold text-zinc-800 dark:text-zinc-100 mb-4 leading-tight">
-            Join Recorded Batch for<br />
-            Inspector Posts Exam 2026
+            Prepare for Inspector Posts Exam 2026 with Confidence
           </h2>
-          <p className="text-zinc-500 dark:text-zinc-400 text-lg mb-8 max-w-2xl mx-auto">
-            Recorded Lecture for Paper-I, II, III, PDF Printable Notes both English & Hindi, Mock Test of All Topic and Paper wise.
+          <p className="text-zinc-500 dark:text-zinc-400 text-lg mb-8 max-w-3xl mx-auto">
+            Practice-rich MCQs, structured Study Planner, comprehensive Web Guide, quick-revision Flash Cards, and printable PDF Notes — everything you need to level up your preparation.
           </p>
           <button className="px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-full font-bold text-lg shadow-xl shadow-blue-500/30 transition-all hover:scale-105 active:scale-95">
             Join Now
@@ -80,13 +80,14 @@ export default async function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             {[
-              "An ISO 9001:2015 & MSME (Govt. of India) Certified Publication Institution.",
-              "Faculties having expertise in their field and having more than 15 Years of Experience in Department",
-              "Unique Teaching Method through visual ads on PPT",
-              "Doubt Clear Session at the end of every Live Class",
-              "Updated Contents and Unique Notes",
-              "Evaluation of Preparation through Mock Tests",
-              "Any time Study through App or Website."
+              "Reliable and Trusted Platform for Departmental Exam Preparation",
+              "Expert-curated content designed by experienced Postal professionals",
+              "Well-structured Study Planner to organize your daily learning",
+              "Comprehensive Web Guide covering all important rules, acts, and procedures",
+              "MCQs, Flash Cards, and Topic-wise Revision for smart practice",
+              "Regular updates to study materials and PDF Notes",
+              "Mock Tests for self-evaluation and progress tracking",
+              "Study anytime, anywhere through the website or app"
             ].map((item, idx) => (
               <div key={idx} className="flex items-start gap-4">
                 <div className="mt-1 shrink-0">
@@ -157,24 +158,7 @@ export default async function Home() {
           </div>
 
           <div className="bg-white dark:bg-zinc-900 p-8 rounded-2xl shadow-xl border border-zinc-100 dark:border-zinc-800">
-            <form className="space-y-4">
-              <div className="space-y-4">
-                <input type="text" placeholder="Enter your first name." className="w-full p-4 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20" />
-                <input type="text" placeholder="Enter your last name." className="w-full p-4 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20" />
-                <input type="email" placeholder="Enter your email ID." className="w-full p-4 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20" />
-                <div className="flex">
-                  <select className="p-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-l-lg border-r-0 outline-none">
-                    <option>🇮🇳 +91</option>
-                  </select>
-                  <input type="tel" placeholder="Mobile Number" className="flex-1 p-4 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-r-lg outline-none focus:ring-2 focus:ring-blue-500/20" />
-                </div>
-                <textarea placeholder="Write your Message here." rows={4} className="w-full p-4 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 Resize-none"></textarea>
-              </div>
-
-              <button type="submit" className="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg transition-colors shadow-lg shadow-blue-500/30">
-                Submit
-              </button>
-            </form>
+            <ContactForm />
           </div>
         </div>
       </section>
