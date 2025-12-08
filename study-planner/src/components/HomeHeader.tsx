@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 
 export default function HomeHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
     const [scrolled, setScrolled] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -17,6 +18,26 @@ export default function HomeHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    // Close mobile menu when resizing to larger screen
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 1024) {
+                setMobileMenuOpen(false);
+            }
+        }
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    // Prevent scrolling when mobile menu is open
+    useEffect(() => {
+        if (mobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+    }, [mobileMenuOpen]);
 
     return (
         <>
@@ -30,14 +51,14 @@ export default function HomeHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
                                 <div className="relative w-8 h-8 overflow-hidden rounded">
                                     <Image src="/logo.jpg" alt="StudyPlanner" fill className="object-cover" />
                                 </div>
-                                <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 hidden sm:block">
+                                <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
                                     Vidyālaya Academy
                                 </span>
                             </Link>
 
                             <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-zinc-600 dark:text-zinc-400">
                                 <Link href="/current-affairs" className="hover:text-blue-600 dark:hover:text-blue-400">Current Affairs</Link>
-                                <Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Postal Updates</Link>
+                                <Link href="/postal-updates" className="hover:text-blue-600 dark:hover:text-blue-400">Postal Updates</Link>
                                 <Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Syllabus</Link>
 
                                 {/* Pass Dropdown */}
@@ -93,15 +114,104 @@ export default function HomeHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
                                     </Link>
                                     <Link
                                         href="/login?mode=signup"
-                                        className="bg-green-600 hover:bg-green-700 text-white text-sm font-bold px-5 py-2.5 rounded-lg shadow-sm hover:shadow-md transition-all active:scale-95"
+                                        className="hidden sm:inline-flex bg-green-600 hover:bg-green-700 text-white text-sm font-bold px-5 py-2.5 rounded-lg shadow-sm hover:shadow-md transition-all active:scale-95"
                                     >
                                         Get Started
                                     </Link>
                                 </>
                             )}
+
+                            {/* Mobile Menu Button */}
+                            <button
+                                className="lg:hidden p-2 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md"
+                                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                            >
+                                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                            </button>
                         </div>
                     </div>
                 </div>
+
+                {/* Mobile Navigation Menu */}
+                {mobileMenuOpen && (
+                    <div className="lg:hidden fixed inset-0 top-[60px] z-40 bg-white dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800 overflow-y-auto pb-20 p-4">
+                        <div className="flex flex-col space-y-4">
+                            {/* Mobile Search */}
+                            <div className="relative group md:hidden">
+                                <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                                    <Search className="w-4 h-4 text-zinc-400" />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search..."
+                                    className="w-full bg-zinc-100 dark:bg-zinc-900 border-none rounded-lg pl-10 pr-4 py-3 text-sm outline-none ring-1 ring-transparent focus:ring-blue-500/50 transition-all dark:text-zinc-200"
+                                />
+                            </div>
+
+                            <nav className="flex flex-col space-y-2 mt-4">
+                                <Link
+                                    href="/current-affairs"
+                                    className="p-3 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 font-medium"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    Current Affairs
+                                </Link>
+                                <Link
+                                    href="/postal-updates"
+                                    className="p-3 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 font-medium"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    Postal Updates
+                                </Link>
+                                <Link
+                                    href="#"
+                                    className="p-3 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 font-medium"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    Syllabus
+                                </Link>
+                                <div className="p-3 border-t border-b border-zinc-100 dark:border-zinc-900 py-4 my-2">
+                                    <p className="text-xs font-semibold text-zinc-400 uppercase mb-3">Courses</p>
+                                    <Link href="/pricing" className="block py-2 text-zinc-700 dark:text-zinc-300" onClick={() => setMobileMenuOpen(false)}>Pass</Link>
+                                    <Link href="/pricing" className="block py-2 text-zinc-700 dark:text-zinc-300" onClick={() => setMobileMenuOpen(false)}>Pass Pro</Link>
+                                </div>
+                                <Link
+                                    href="/about"
+                                    className="p-3 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 font-medium"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    About Us
+                                </Link>
+                            </nav>
+
+                            <div className="pt-4 mt-4 border-t border-zinc-200 dark:border-zinc-800 flex flex-col gap-3">
+                                <div className="flex items-center justify-between p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/50">
+                                    <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Theme</span>
+                                    <ThemeToggle />
+                                </div>
+
+                                {!isLoggedIn && (
+                                    <>
+                                        <Link
+                                            href="/login"
+                                            className="w-full text-center p-3 rounded-lg font-semibold text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900"
+                                            onClick={() => setMobileMenuOpen(false)}
+                                        >
+                                            Log in
+                                        </Link>
+                                        <Link
+                                            href="/login?mode=signup"
+                                            className="w-full text-center p-3 rounded-lg font-bold bg-green-600 text-white hover:bg-green-700 shadow-sm"
+                                            onClick={() => setMobileMenuOpen(false)}
+                                        >
+                                            Get Started
+                                        </Link>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </header>
 
             {/* WhatsApp Float Button */}
