@@ -18,7 +18,7 @@ export default function Home() {
             Vidyālaya Academy
           </h1>
           <p className="text-xl md:text-2xl text-zinc-500 dark:text-zinc-400 font-medium mb-10 max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
-            by <span className="text-blue-600 dark:text-blue-400">Arun Selvaraj</span>
+            Founder : <span className="text-blue-600 dark:text-blue-400">Vidyā A</span>
           </p>
           <p className="text-zinc-400 dark:text-zinc-500 mb-12 max-w-lg mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
             Your comprehensive suite for mastering the Postal Inspector Examination.
