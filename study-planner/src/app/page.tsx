@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 import Image from "next/image";
-import { Check, Smartphone, Mail, MapPin, Phone, ArrowRight, Star, Youtube, Instagram, Twitter, Facebook, MessageCircle, CheckCircle2, BookOpen, Zap, FileText, Layout, Award } from "lucide-react";
+import { Check, Smartphone, Mail, MapPin, Phone, ArrowRight, Star, Youtube, Instagram, Twitter, Facebook, MessageCircle, CheckCircle2, BookOpen, Zap, FileText, Layout, Award, Newspaper } from "lucide-react";
 import { redirect } from "next/navigation";
 import HomeHeader from "@/components/HomeHeader";
 import ContactForm from "@/components/ContactForm";
@@ -30,8 +30,10 @@ export default async function Home() {
 
       {/* 3. Feature Tiles */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
           {[
+            { title: "Current Affairs", desc: "Daily News & Updates", color: "from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20", icon: Newspaper, link: "/current-affairs" },
+            { title: "Postal Updates", desc: "Circulars & Orders", color: "from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20", icon: Mail, link: "/postal-updates" },
             { title: "MCQs", desc: "Practice Questions", color: "from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20", icon: CheckCircle2, link: "/quiz" },
             { title: "Study Planner", desc: "Organize Learning", color: "from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20", icon: Layout, link: "/planner" },
             { title: "Web Guide", desc: "Comprehensive Resources", color: "from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20", icon: BookOpen, link: "/guide" },
