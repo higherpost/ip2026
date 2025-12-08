@@ -40,7 +40,7 @@ export default async function Home() {
             { title: "Current Affairs", desc: "Daily News & Updates", color: "from-sky-400 to-indigo-600", icon: Newspaper, link: "/current-affairs" },
             { title: "Postal Updates", desc: "Circulars & Orders", color: "from-orange-400 to-pink-600", icon: Mail, link: "/postal-updates" }
           ].map((item, idx) => (
-            <Link key={idx} href={item.link} className="group cursor-pointer block w-full sm:w-64 md:w-72 aspect-square">
+            <Link key={idx} href={item.link} className="group cursor-pointer block w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] aspect-square">
               <div className={`relative h-full aspect-square rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-${item.color.split('-')[1]}-500/30 transition-all duration-300 transform hover:-translate-y-2 border border-white/20 dark:border-zinc-800 bg-gradient-to-br ${item.color} p-1`}>
                 <div className="absolute inset-0 bg-white/10 dark:bg-black/10 group-hover:bg-transparent transition-colors"></div>
                 <div className="relative h-full w-full bg-white/90 dark:bg-zinc-950/90 rounded-[20px] flex flex-col items-center justify-center p-6 backdrop-blur-sm">
