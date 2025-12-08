@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Target, Lightbulb, CheckCircle2, MessageCircle, Check, Star, Youtube, Mail, Award } from "lucide-react";
+import { ArrowLeft, BookOpen, Target, Lightbulb, CheckCircle2, Award, Zap, Layout, FileText, Smartphone } from "lucide-react";
 
 export default function AboutPage() {
     return (
@@ -46,19 +46,19 @@ export default function AboutPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[
-                            { title: "MCQs & Practice Questions", desc: "Topic-wise and exam-oriented questions to strengthen conceptual understanding.", icon: MessageCircle, color: "from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20" },
-                            { title: "Web Guide", desc: "Comprehensive notes covering rules, acts, manuals, procedures, and departmental references.", icon: Star, color: "from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20" },
-                            { title: "Flash Cards", desc: "Quick revision tools to help you recall important points instantly.", icon: Youtube, color: "from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20" },
-                            { title: "PDF Notes", desc: "Compact and printable study material for focused preparation.", icon: Mail, color: "from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20" },
-                            { title: "Study Planner", desc: "A smart organizing tool to help you plan and track your daily targets.", icon: Check, color: "from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20" },
-                            { title: "Mock Tests", desc: "Evaluate your preparation with full-length and topic-wise tests.", icon: Award, color: "from-cyan-50 to-sky-50 dark:from-cyan-900/20 dark:to-sky-900/20" }
+                            { title: "MCQs & Practice Questions", desc: "Topic-wise and exam-oriented questions to strengthen conceptual understanding.", icon: CheckCircle2, color: "text-green-500", bg: "bg-green-50 dark:bg-green-900/20" },
+                            { title: "Web Guide", desc: "Comprehensive notes covering rules, acts, manuals, procedures, and departmental references.", icon: BookOpen, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-900/20" },
+                            { title: "Flash Cards", desc: "Quick revision tools to help you recall important points instantly.", icon: Zap, color: "text-yellow-500", bg: "bg-yellow-50 dark:bg-yellow-900/20" },
+                            { title: "PDF Notes", desc: "Compact and printable study material for focused preparation.", icon: FileText, color: "text-red-500", bg: "bg-red-50 dark:bg-red-900/20" },
+                            { title: "Study Planner", desc: "A smart organizing tool to help you plan and track your daily targets.", icon: Layout, color: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-900/20" },
+                            { title: "Mock Tests", desc: "Evaluate your preparation with full-length and topic-wise tests.", icon: Award, color: "text-pink-500", bg: "bg-pink-50 dark:bg-pink-900/20" }
                         ].map((item, idx) => (
-                            <div key={idx} className={`group p-8 rounded-2xl bg-gradient-to-br ${item.color} border border-zinc-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2`}>
-                                <div className="mb-6 p-4 bg-white/60 dark:bg-black/20 rounded-full w-fit group-hover:scale-110 transition-transform shadow-sm">
-                                    <item.icon className="w-8 h-8 text-zinc-700 dark:text-zinc-200" />
+                            <div key={idx} className="group p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                <div className={`w-14 h-14 ${item.bg} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                                    <item.icon className={`w-8 h-8 ${item.color}`} />
                                 </div>
                                 <h3 className="text-xl font-bold text-zinc-800 dark:text-zinc-100 mb-3">{item.title}</h3>
-                                <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed text-sm">
+                                <p className="text-zinc-500 dark:text-zinc-400 leading-relaxed">
                                     {item.desc}
                                 </p>
                             </div>
