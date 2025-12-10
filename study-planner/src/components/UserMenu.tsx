@@ -22,13 +22,16 @@ import {
     Keyboard,
     Home as HomeIcon,
     LogOut,
-    Shield
+    Shield,
+    BarChart3,
+    Bookmark
 } from "lucide-react";
 
 interface UserSession {
     name: string;
     email?: string;
     role?: 'user' | 'admin';
+    membershipLevel?: 'free' | 'silver' | 'gold';
 }
 
 export function UserMenu() {
@@ -88,7 +91,17 @@ export function UserMenu() {
             <DropdownMenuContent className="w-64" align="end" forceMount>
                 {/* User Stats/Info Header */}
                 <div className="flex flex-col space-y-1 p-2">
-                    <p className="font-medium text-sm leading-none">{session?.name || 'Guest User'}</p>
+                    <div className="flex items-center justify-between">
+                        <p className="font-medium text-sm leading-none">{session?.name || 'Guest User'}</p>
+                        {session?.membershipLevel && session.membershipLevel !== 'free' && (
+                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border uppercase ${session.membershipLevel === 'gold'
+                                ? 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-800'
+                                : 'bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-800/50 dark:text-slate-200 dark:border-slate-700'
+                                }`}>
+                                {session.membershipLevel}
+                            </span>
+                        )}
+                    </div>
                     <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-none">
                         {session?.email || 'user@example.com'}
                     </p>
@@ -101,30 +114,32 @@ export function UserMenu() {
                         <LayoutDashboard className="mr-2 h-4 w-4 text-zinc-500" />
                         <span>Dashboard</span>
                     </DropdownMenuItem>
+
+                    <DropdownMenuItem onClick={() => router.push('/quiz/results')}>
+                        <BarChart3 className="mr-2 h-4 w-4 text-zinc-500" />
+                        <span>My Progress</span>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem onClick={() => router.push('/bookmarks')}>
+                        <Bookmark className="mr-2 h-4 w-4 text-zinc-500" />
+                        <span>Bookmarks</span>
+                    </DropdownMenuItem>
+
                     <DropdownMenuItem onClick={() => router.push('/settings')}>
                         <User className="mr-2 h-4 w-4 text-zinc-500" />
                         <span>Account Settings</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        <PlusCircle className="mr-2 h-4 w-4 text-zinc-500" />
-                        <span>Create Team</span>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
 
                 <DropdownMenuSeparator />
 
                 <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                        <Keyboard className="mr-2 h-4 w-4 text-zinc-500" />
-                        <span>Command Menu</span>
-                        <span className="ml-auto text-xs tracking-widest text-zinc-500 border border-zinc-200 dark:border-zinc-700 px-1 rounded bg-zinc-100 dark:bg-zinc-800">
-                            ⌘K
-                        </span>
-                    </DropdownMenuItem>
-
                     {/* Custom Theme Switcher Row */}
                     <div className="flex items-center justify-between px-2 py-2 text-sm">
-                        <span className="flex items-center">Themes</span>
+                        <span className="flex items-center text-zinc-700 dark:text-zinc-300">
+                            <span className="inline-block mr-2"><Moon className="h-4 w-4 text-zinc-500" /></span>
+                            Themes
+                        </span>
                         <div className="flex items-center p-1 bg-zinc-100 dark:bg-zinc-800 rounded-full border border-zinc-200 dark:border-zinc-700">
                             <button
                                 onClick={() => setTheme("system")}
@@ -156,13 +171,11 @@ export function UserMenu() {
                 <DropdownMenuItem onClick={() => router.push('/')}>
                     <HomeIcon className="mr-2 h-4 w-4 text-zinc-500" />
                     <span>Home Page</span>
-                    <span className="ml-auto text-xs text-zinc-400">⇧⌘H</span>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem onClick={handleLogout} className="text-red-500 dark:text-red-400 focus:text-red-500 focus:bg-red-50 dark:focus:bg-red-900/10">
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log Out</span>
-                    <span className="ml-auto text-xs opacity-60">⇧⌘Q</span>
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
@@ -178,12 +191,14 @@ export function UserMenu() {
                         </button>
                     )}
 
-                    <button
-                        onClick={() => router.push('/pricing')}
-                        className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-zinc-900 to-zinc-700 dark:from-zinc-100 dark:to-zinc-300 text-white dark:text-zinc-900 text-sm font-semibold py-2 rounded-lg shadow-sm hover:shadow-md transition-all active:scale-95"
-                    >
-                        <span>Upgrade to Pro</span>
-                    </button>
+                    {(!session?.membershipLevel || session.membershipLevel === 'free') && (
+                        <button
+                            onClick={() => router.push('/pricing')}
+                            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-zinc-900 to-zinc-700 dark:from-zinc-100 dark:to-zinc-300 text-white dark:text-zinc-900 text-sm font-semibold py-2 rounded-lg shadow-sm hover:shadow-md transition-all active:scale-95"
+                        >
+                            <span>Upgrade to Pro</span>
+                        </button>
+                    )}
                 </div>
 
             </DropdownMenuContent>
