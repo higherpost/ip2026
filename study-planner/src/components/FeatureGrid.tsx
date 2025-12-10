@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CheckCircle2, Layout, BookOpen, Zap, FileText, Newspaper, Mail, Lock, Unlock, FileQuestion } from "lucide-react";
+import { CheckCircle2, Layout, BookOpen, Zap, FileText, Newspaper, Mail, Lock, Unlock, FileQuestion, MessageCircleQuestion } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface FeatureGridProps {
@@ -27,19 +27,22 @@ export default function FeatureGrid({ membershipLevel }: FeatureGridProps) {
         { title: "PDF Notes", desc: "Downloadable Content", color: "text-rose-600", bg: "bg-rose-50 dark:bg-rose-900/20", border: "group-hover:border-rose-500", shadow: "group-hover:shadow-rose-500/20", icon: FileText, link: "/notes", badge: "Gold" },
         { title: "Current Affairs", desc: "Daily News & Updates", color: "text-indigo-600", bg: "bg-indigo-50 dark:bg-indigo-900/20", border: "group-hover:border-indigo-500", shadow: "group-hover:shadow-indigo-500/20", icon: Newspaper, link: "/current-affairs", badge: "Free" },
         { title: "Postal Updates", desc: "Circulars & Orders", color: "text-pink-600", bg: "bg-pink-50 dark:bg-pink-900/20", border: "group-hover:border-pink-500", shadow: "group-hover:shadow-pink-500/20", icon: Mail, link: "/postal-updates", badge: "Free" },
-        { title: "PYQ Papers", desc: "Previous Years", color: "text-cyan-600", bg: "bg-cyan-50 dark:bg-cyan-900/20", border: "group-hover:border-cyan-500", shadow: "group-hover:shadow-cyan-500/20", icon: FileQuestion, link: "/pyq", badge: "Silver" }
+        { title: "PYQ Papers", desc: "Previous Years", color: "text-cyan-600", bg: "bg-cyan-50 dark:bg-cyan-900/20", border: "group-hover:border-cyan-500", shadow: "group-hover:shadow-cyan-500/20", icon: FileQuestion, link: "/pyq", badge: "Silver" },
+        { title: "Queries and Answers", desc: "Ask & Discuss", color: "text-teal-600", bg: "bg-teal-50 dark:bg-teal-900/20", border: "group-hover:border-teal-500", shadow: "group-hover:shadow-teal-500/20", icon: MessageCircleQuestion, link: "/queries", badge: "Free", className: "col-span-2 lg:col-start-2 aspect-[2.5/1]" }
     ];
 
     return (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
             {features.map((item, idx) => {
                 const isUnlocked = hasAccess(item.badge);
+                // @ts-ignore
+                const customClass = item.className || 'aspect-[4/3] sm:aspect-square';
 
                 return (
                     <Link
                         key={idx}
                         href={isUnlocked ? item.link : "/pricing"}
-                        className={`group relative block w-full aspect-[4/3] sm:aspect-square ${!isUnlocked ? 'cursor-not-allowed' : ''}`}
+                        className={`group relative block w-full ${customClass} ${!isUnlocked ? 'cursor-not-allowed' : ''}`}
                         onClick={(e) => {
                             if (!isUnlocked) {
                                 e.preventDefault();
