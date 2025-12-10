@@ -368,9 +368,13 @@ function AuthForm() {
                                     <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 ml-1">
                                         Password
                                     </label>
-                                    <Link href="/forgot-password" className="text-xs font-semibold text-blue-600 hover:text-blue-500 hover:underline">
+                                    <button
+                                        type="button"
+                                        onClick={() => router.push('/forgot-password')}
+                                        className="text-xs font-semibold text-blue-600 hover:text-blue-500 hover:underline bg-transparent border-none cursor-pointer"
+                                    >
                                         Forgot Password?
-                                    </Link>
+                                    </button>
                                 </div>
                                 <div className="relative group">
                                     <div className="absolute left-4 top-3.5 text-zinc-400 group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400 transition-colors">
