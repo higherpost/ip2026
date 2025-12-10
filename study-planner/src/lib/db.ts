@@ -87,7 +87,7 @@ export async function verifyUser(email: string, password: string): Promise<User 
     return user;
 }
 
-export function updateUser(currentEmail: string, updates: Partial<Pick<User, 'name' | 'email'>>): User | null {
+export function updateUser(currentEmail: string, updates: Partial<User>): User | null {
     const users = getAllUsers();
     const userIndex = users.findIndex((u) => u.email.toLowerCase() === currentEmail.toLowerCase());
 

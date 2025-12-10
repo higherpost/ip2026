@@ -3,7 +3,7 @@ import { updateUser } from '@/lib/db';
 
 export async function POST(request: Request) {
     try {
-        const { currentEmail, name, email } = await request.json();
+        const { currentEmail, name, email, mobile, designation, pincode, officeName, division, circle } = await request.json();
 
         if (!currentEmail) {
             return NextResponse.json(
@@ -12,7 +12,16 @@ export async function POST(request: Request) {
             );
         }
 
-        const updatedUser = updateUser(currentEmail, { name, email });
+        const updatedUser = updateUser(currentEmail, {
+            name,
+            email,
+            mobile,
+            designation,
+            pincode,
+            officeName,
+            division,
+            circle
+        });
 
         if (!updatedUser) {
             return NextResponse.json(
@@ -22,10 +31,11 @@ export async function POST(request: Request) {
         }
 
         // Create response
-        const response = NextResponse.json({ success: true, user: { name: updatedUser.name, email: updatedUser.email } });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { passwordHash, ...safeUser } = updatedUser;
+        const response = NextResponse.json({ success: true, user: safeUser });
 
         // Update the session cookie with new details
-        // Re-calculate maxAge or preserve it? For simplicity, reset to 1 day.
         const maxAge = 60 * 60 * 24;
 
         response.cookies.set('user_session', JSON.stringify({ name: updatedUser.name, email: updatedUser.email, role: updatedUser.role }), {

@@ -9,18 +9,31 @@ import ContactForm from "@/components/ContactForm";
 export default async function Home() {
   const cookieStore = await cookies();
   const authToken = cookieStore.get("auth_token");
+  const userSession = cookieStore.get("user_session");
+
+  let displayName = "Aspirant";
   const isLoggedIn = !!authToken;
+
+  if (isLoggedIn && userSession?.value) {
+    try {
+      const userData = JSON.parse(userSession.value);
+      if (userData.name) {
+        displayName = userData.name;
+      }
+    } catch (e) {
+      console.error("Failed to parse user session", e);
+    }
+  }
 
   return (
     <div className="min-h-screen font-sans bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
-      {/* 1. Navbar */}
       {/* 1. Navbar */}
       <HomeHeader isLoggedIn={isLoggedIn} />
 
       {/* 2. Hero Section */}
       <section className="pt-16 pb-12 text-center px-4">
-        <h1 className="text-3xl md:text-5xl font-extrabold text-blue-600 dark:text-blue-400 mb-4">
-          Welcome Aspirant
+        <h1 className="text-3xl md:text-5xl font-extrabold text-blue-600 dark:text-blue-400 mb-4 capitalize">
+          Welcome {displayName}
         </h1>
 
         <p className="text-zinc-600 dark:text-zinc-300 text-xl max-w-3xl mx-auto">
