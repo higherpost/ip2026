@@ -46,24 +46,12 @@ export default async function Home() {
   return (
     <div className="min-h-screen font-sans bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
       {/* 1. Navbar */}
-      <HomeHeader isLoggedIn={isLoggedIn} />
+      <HomeHeader isLoggedIn={isLoggedIn} membershipLevel={membershipLevel as any} />
 
       {/* 2. Hero Section */}
       <section className="pt-16 pb-12 text-center px-4">
         <h1 className="text-3xl md:text-5xl font-extrabold text-blue-600 dark:text-blue-400 mb-4 capitalize flex items-center justify-center gap-3 flex-wrap">
           <span>Welcome {displayName}</span>
-
-          {/* Membership Badge */}
-          {membershipLevel === 'gold' && (
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 text-amber-900 shadow-lg shadow-amber-500/30 animate-in zoom-in spin-in-3 cursor-default select-none border border-amber-200">
-              <StarIcon className="w-4 h-4 fill-amber-700 text-amber-700" /> Gold Member
-            </span>
-          )}
-          {membershipLevel === 'silver' && (
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-gradient-to-r from-slate-200 via-zinc-300 to-slate-400 text-slate-900 shadow-lg shadow-zinc-500/20 animate-in zoom-in spin-in-3 cursor-default select-none border border-slate-300">
-              <StarIcon className="w-4 h-4 fill-slate-700 text-slate-700" /> Silver Member
-            </span>
-          )}
         </h1>
 
         <p className="text-zinc-600 dark:text-zinc-300 text-xl max-w-3xl mx-auto">

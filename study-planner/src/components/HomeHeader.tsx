@@ -7,7 +7,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { UserMenu } from "./UserMenu";
 import { useEffect, useState } from "react";
 
-export default function HomeHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
+export default function HomeHeader({ isLoggedIn, membershipLevel }: { isLoggedIn: boolean, membershipLevel?: 'free' | 'silver' | 'gold' }) {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -39,6 +39,8 @@ export default function HomeHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
         }
     }, [mobileMenuOpen]);
 
+    const isPremium = membershipLevel === 'gold' || membershipLevel === 'silver';
+
     return (
         <>
             <header className={`sticky top-0 z-50 bg-white dark:bg-zinc-950 transition-all border-b border-zinc-200 dark:border-zinc-800 ${scrolled ? 'shadow-md py-2' : 'py-4'}`}>
@@ -62,16 +64,25 @@ export default function HomeHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
                                 <Link href="/current-affairs" className="hover:text-blue-600 dark:hover:text-blue-400">Current Affairs</Link>
                                 <Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Syllabus</Link>
 
-                                <Link
-                                    href="/pricing"
-                                    className="relative px-6 py-2 rounded-full font-bold text-white bg-gradient-to-r from-amber-400 to-yellow-600 shadow-lg shadow-amber-500/30 overflow-hidden group hover:scale-105 transition-transform"
-                                >
-                                    <span className="relative z-10 flex items-center gap-1">
-                                        Upgrade <span className="animate-pulse">✨</span>
+                                {isPremium ? (
+                                    <span className={`px-4 py-1.5 rounded-full font-bold text-xs uppercase tracking-wide shadow-sm border ${membershipLevel === 'gold'
+                                            ? 'bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 text-amber-900 border-amber-200'
+                                            : 'bg-gradient-to-r from-slate-200 via-zinc-300 to-slate-400 text-slate-900 border-slate-300'
+                                        }`}>
+                                        {membershipLevel === 'gold' ? '★ Gold Member' : '★ Silver Member'}
                                     </span>
-                                    {/* Shine effect */}
-                                    <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12" />
-                                </Link>
+                                ) : (
+                                    <Link
+                                        href="/pricing"
+                                        className="relative px-6 py-2 rounded-full font-bold text-white bg-gradient-to-r from-amber-400 to-yellow-600 shadow-lg shadow-amber-500/30 overflow-hidden group hover:scale-105 transition-transform"
+                                    >
+                                        <span className="relative z-10 flex items-center gap-1">
+                                            Upgrade <span className="animate-pulse">✨</span>
+                                        </span>
+                                        {/* Shine effect */}
+                                        <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12" />
+                                    </Link>
+                                )}
                             </nav>
                         </div>
 
@@ -171,13 +182,22 @@ export default function HomeHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
                                     Syllabus
                                 </Link>
 
-                                <Link
-                                    href="/pricing"
-                                    className="p-3 rounded-lg bg-gradient-to-r from-amber-100 to-yellow-100 dark:from-amber-900/40 dark:to-yellow-900/40 text-amber-900 dark:text-amber-200 font-bold flex items-center gap-2"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                >
-                                    Upgrade <span>✨</span>
-                                </Link>
+                                {isPremium ? (
+                                    <div className={`p-3 rounded-lg font-bold text-center ${membershipLevel === 'gold'
+                                            ? 'bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-900'
+                                            : 'bg-gradient-to-r from-slate-100 to-zinc-200 text-slate-800'
+                                        }`}>
+                                        {membershipLevel === 'gold' ? '★ Gold Member' : '★ Silver Member'}
+                                    </div>
+                                ) : (
+                                    <Link
+                                        href="/pricing"
+                                        className="p-3 rounded-lg bg-gradient-to-r from-amber-100 to-yellow-100 dark:from-amber-900/40 dark:to-yellow-900/40 text-amber-900 dark:text-amber-200 font-bold flex items-center gap-2"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        Upgrade <span>✨</span>
+                                    </Link>
+                                )}
                             </nav>
 
                             <div className="pt-4 mt-4 border-t border-zinc-200 dark:border-zinc-800 flex flex-col gap-3">
