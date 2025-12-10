@@ -73,7 +73,7 @@ export default function FeatureGrid({ membershipLevel }: FeatureGridProps) {
                             {/* Content Overlay when Locked */}
                             {/* Content Overlay when Locked */}
                             {!isUnlocked && (
-                                <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-white/60 dark:bg-black/80 backdrop-blur-[2px] transition-all p-4">
+                                <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-white/95 dark:bg-zinc-950/90 backdrop-blur-sm transition-all duration-300 opacity-0 group-hover:opacity-100 p-4">
                                     <div className={`
                                         w-full py-2.5 rounded-full font-bold text-xs md:text-sm shadow-xl transform hover:scale-105 transition-transform flex items-center justify-center gap-2 animate-pulse
                                         ${item.badge === 'Gold'
