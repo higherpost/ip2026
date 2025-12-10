@@ -20,7 +20,6 @@ function AuthForm() {
         email: "",
         password: "",
         mobile: "",
-        otp: "",
         designation: "",
         pincode: "",
         officeName: "",
@@ -31,11 +30,6 @@ function AuthForm() {
     // Pincode/Office Fetch State
     const [officeList, setOfficeList] = useState<any[]>([]);
     const [isFetchingOffices, setIsFetchingOffices] = useState(false);
-
-    // OTP State
-    const [otpSent, setOtpSent] = useState(false);
-    const [otpVerified, setOtpVerified] = useState(false); // In real app, verify on backend
-    const [generatedOtp, setGeneratedOtp] = useState(""); // For simulation only
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
@@ -50,13 +44,6 @@ function AuthForm() {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
         setError("");
-
-        // Reset verification if mobile changes
-        if (name === "mobile") {
-            setOtpSent(false);
-            setOtpVerified(false);
-            setGeneratedOtp("");
-        }
 
         // Fetch offices when pincode reaches 6 digits
         if (name === "pincode") {
@@ -109,27 +96,6 @@ function AuthForm() {
         }
     };
 
-    const sendOtp = () => {
-        if (formData.mobile.length < 10) {
-            setError("Please enter a valid mobile number.");
-            return;
-        }
-        // Simulation
-        const mockOtp = Math.floor(100000 + Math.random() * 900000).toString();
-        setGeneratedOtp(mockOtp);
-        setOtpSent(true);
-        alert(`OTP sent to ${formData.mobile}: ${mockOtp}`); // Using alert for simulation visibility
-    };
-
-    const verifyOtp = () => {
-        if (formData.otp === generatedOtp) {
-            setOtpVerified(true);
-            setError("");
-        } else {
-            setError("Invalid OTP. Please try again.");
-        }
-    };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -137,11 +103,6 @@ function AuthForm() {
 
         // Basic Signup Validation
         if (!isLogin) {
-            if (!otpVerified) {
-                setError("Please verify your mobile number first.");
-                setIsLoading(false);
-                return;
-            }
             if (!formData.designation) {
                 setError("Please select a designation.");
                 setIsLoading(false);
@@ -232,66 +193,28 @@ function AuthForm() {
                                     </div>
                                 </div>
 
-                                {/* Mobile & OTP */}
+                                {/* Mobile No */}
                                 <div className="space-y-2 col-span-1 md:col-span-2">
                                     <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 ml-1">
                                         Mobile No.
                                     </label>
-                                    <div className="flex gap-2">
-                                        <div className="relative group flex-grow">
-                                            <input
-                                                name="mobile"
-                                                type="tel"
-                                                value={formData.mobile}
-                                                onChange={handleInputChange}
-                                                className="w-full bg-zinc-50/50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-zinc-700 rounded-2xl py-3.5 px-4 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 dark:focus:border-blue-400 transition-all placeholder:text-zinc-400"
-                                                placeholder="9876543210"
-                                                required
-                                                disabled={otpVerified}
-                                            />
+                                    <div className="relative group">
+                                        <div className="absolute left-4 top-3.5 text-zinc-400 group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400 transition-colors">
+                                            <Phone className="w-5 h-5" />
                                         </div>
-                                        {!otpVerified && (
-                                            <button
-                                                type="button"
-                                                onClick={sendOtp}
-                                                disabled={otpSent || formData.mobile.length < 10}
-                                                className="bg-blue-600 text-white px-4 rounded-2xl text-sm font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
-                                            >
-                                                {otpSent ? "Sent" : "Send OTP"}
-                                            </button>
-                                        )}
-                                        {otpVerified && (
-                                            <div className="bg-green-100 text-green-700 px-4 rounded-2xl text-sm font-semibold flex items-center">Verified</div>
-                                        )}
+                                        <input
+                                            name="mobile"
+                                            type="tel"
+                                            value={formData.mobile}
+                                            onChange={handleInputChange}
+                                            className="w-full bg-zinc-50/50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-zinc-700 rounded-2xl py-3.5 pl-12 pr-4 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 dark:focus:border-blue-400 transition-all placeholder:text-zinc-400"
+                                            placeholder="9876543210"
+                                            required
+                                            minLength={10}
+                                            maxLength={10}
+                                        />
                                     </div>
                                 </div>
-
-                                {/* OTP Input */}
-                                {otpSent && !otpVerified && (
-                                    <div className="space-y-2 col-span-1 md:col-span-2 animate-in fade-in slide-in-from-top-2">
-                                        <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 ml-1">
-                                            Enter OTP
-                                        </label>
-                                        <div className="flex gap-2">
-                                            <input
-                                                name="otp"
-                                                type="text"
-                                                value={formData.otp}
-                                                onChange={handleInputChange}
-                                                className="w-full bg-zinc-50/50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-zinc-700 rounded-lg py-2 px-4 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 dark:focus:border-blue-400 transition-all"
-                                                placeholder="Enter 6 digit OTP"
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={verifyOtp}
-                                                className="bg-green-600 text-white px-4 rounded-lg text-sm font-semibold hover:bg-green-700"
-                                            >
-                                                Verify
-                                            </button>
-                                        </div>
-                                        <p className="text-xs text-zinc-500">For demo: Use {generatedOtp}</p>
-                                    </div>
-                                )}
 
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 ml-1">
@@ -490,7 +413,7 @@ function AuthForm() {
                                 onClick={() => {
                                     setIsLogin(!isLogin);
                                     setError("");
-                                    setFormData({ name: "", email: "", password: "", mobile: "", otp: "", designation: "", pincode: "", officeName: "", division: "", circle: "" });
+                                    setFormData({ name: "", email: "", password: "", mobile: "", designation: "", pincode: "", officeName: "", division: "", circle: "" });
                                 }}
                                 className="text-blue-600 hover:text-blue-500 font-semibold hover:underline bg-transparent border-none cursor-pointer ml-1"
                             >
