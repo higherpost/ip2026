@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getUserByEmail, updateUser } from '@/lib/db';
 import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 
 export async function POST(request: Request) {
     try {
@@ -13,25 +14,26 @@ export async function POST(request: Request) {
         const user = getUserByEmail(email);
 
         if (user) {
-            // Generate token
-            const resetToken = crypto.randomBytes(32).toString('hex');
-            const resetTokenExpiry = Date.now() + 3600000; // 1 hour from now
+            // Generate temporary password (8 chars)
+            const tempPassword = Math.random().toString(36).slice(-8);
 
-            // Update user
+            // Hash the temporary password
+            const passwordHash = await bcrypt.hash(tempPassword, 10);
+
+            // Update user with new password hash
             updateUser(email, {
-                resetToken,
-                resetTokenExpiry
+                passwordHash
             });
 
-            // Simulate sending email
-            const resetLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
+            // Simulate sending email with ACTUAL password
             console.log("---------------------------------------------------");
-            console.log(`Password Reset Link for ${email}: ${resetLink}`);
+            console.log(`PASSWORD RECOVERY FOR: ${email}`);
+            console.log(`YOUR TEMPORARY PASSWORD IS: ${tempPassword}`);
             console.log("---------------------------------------------------");
         }
 
         // Always return success to prevent email enumeration
-        return NextResponse.json({ success: true, message: "If an account exists with this email, a reset link has been sent." });
+        return NextResponse.json({ success: true, message: "If an account exists with this email, a temporary password has been sent to it." });
 
     } catch (error) {
         console.error("Forgot Password Error:", error);

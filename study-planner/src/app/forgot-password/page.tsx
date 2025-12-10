@@ -47,7 +47,7 @@ export default function ForgotPasswordPage() {
                 <div className="text-center mb-8">
                     <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">Forgot Password?</h1>
                     <p className="text-zinc-500 text-sm">
-                        Enter your email address and we'll send you a link to reset your password.
+                        Enter your email address and we'll send you a temporary password.
                     </p>
                 </div>
 
@@ -58,7 +58,7 @@ export default function ForgotPasswordPage() {
                         </div>
                         <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-2">Check your inbox</h3>
                         <p className="text-zinc-500 text-sm mb-6">
-                            If an account exists for <strong>{email}</strong>, we have sent a password reset link to it.
+                            If an account exists for <strong>{email}</strong>, we have sent a temporary password to it.
                         </p>
                         <button
                             onClick={() => setIsSubmitted(false)}
@@ -97,7 +97,7 @@ export default function ForgotPasswordPage() {
                             disabled={isLoading}
                             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-2xl transition-all shadow-lg shadow-blue-600/25 disabled:opacity-70 flex items-center justify-center"
                         >
-                            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Send Reset Link"}
+                            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Send Password"}
                         </button>
                     </form>
                 )}
