@@ -5,7 +5,8 @@
     "name": "Arun Selvaraj",
     "passwordHash": "$2b$10$DWKJHbDGlsb1eXvV75XHpOEfagNUEotDCgOoNonHmp5.Tk.JuoYci",
     "createdAt": "2025-12-07T16:56:59.221Z",
-    "role": "user"
+    "role": "user",
+    "membershipLevel": "silver"
   },
   {
     "id": "8400a18d-19da-44b8-9fe2-48ff2110e3fa",
@@ -13,7 +14,8 @@
     "name": "System Admin",
     "role": "admin",
     "passwordHash": "$2b$10$/zajJELmqHvTHdYi1t3pROtNv8jzWb0l3iWVdJ6U7szy9siVdwnmO",
-    "createdAt": "2025-12-08T02:35:11.851Z"
+    "createdAt": "2025-12-08T02:35:11.851Z",
+    "membershipLevel": "gold"
   },
   {
     "id": "b48a51a3-11fb-4344-ad0c-f47f7c8313f6",
@@ -21,7 +23,8 @@
     "name": "Vidhya A",
     "role": "admin",
     "passwordHash": "$2b$10$Bd1700aikVtA506toDJpnuKVxDqYjeMJfOCpYVe6CJzwmgyh27Hlu",
-    "createdAt": "2025-12-08T13:58:55.823Z"
+    "createdAt": "2025-12-08T13:58:55.823Z",
+    "membershipLevel": "silver"
   },
   {
     "id": "269a4310-ed1c-473a-893d-dabf0aa4a980",
@@ -36,6 +39,6 @@
     "officeName": "Kulittalai H.O",
     "division": "Karur Division",
     "circle": "TAMIL NADU",
-    "membershipLevel": "gold"
+    "membershipLevel": "free"
   }
 ]

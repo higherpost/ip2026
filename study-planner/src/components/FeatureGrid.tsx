@@ -71,11 +71,21 @@ export default function FeatureGrid({ membershipLevel }: FeatureGridProps) {
                             <div className={`absolute top-0 right-0 w-16 h-16 md:w-24 md:h-24 ${item.bg} rounded-bl-[60px] md:rounded-bl-[100px] opacity-60 transition-transform duration-500 group-hover:scale-150`}></div>
 
                             {/* Content Overlay when Locked */}
+                            {/* Content Overlay when Locked */}
                             {!isUnlocked && (
-                                <div className="absolute inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-[1px] z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="bg-zinc-900 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-xl">
-                                        Upgrade to Unlock
-                                    </span>
+                                <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-white/60 dark:bg-black/80 backdrop-blur-[2px] transition-all p-4">
+                                    <div className={`
+                                        w-full py-2.5 rounded-full font-bold text-xs md:text-sm shadow-xl transform hover:scale-105 transition-transform flex items-center justify-center gap-2 animate-pulse
+                                        ${item.badge === 'Gold'
+                                            ? 'bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 text-amber-900 border border-amber-200'
+                                            : 'bg-gradient-to-r from-slate-200 via-zinc-300 to-slate-400 text-slate-900 border border-slate-300'}
+                                    `}>
+                                        <Lock className="w-4 h-4" />
+                                        <span>Upgrade to {item.badge}</span>
+                                    </div>
+                                    <p className="text-[10px] font-medium text-zinc-500 dark:text-zinc-400 mt-2 text-center leading-tight">
+                                        Click to unlock this feature
+                                    </p>
                                 </div>
                             )}
 
