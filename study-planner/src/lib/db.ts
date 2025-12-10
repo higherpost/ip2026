@@ -17,6 +17,8 @@ export interface User {
     passwordHash: string;
     role?: 'user' | 'admin';
     membershipLevel?: 'free' | 'silver' | 'gold';
+    resetToken?: string;
+    resetTokenExpiry?: number;
     createdAt: string;
 }
 
@@ -45,6 +47,11 @@ export function getAllUsers(): User[] {
 export function getUserByEmail(email: string): User | undefined {
     const users = getAllUsers();
     return users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+}
+
+export function getUserByResetToken(token: string): User | undefined {
+    const users = getAllUsers();
+    return users.find((u) => u.resetToken === token && u.resetTokenExpiry && u.resetTokenExpiry > Date.now());
 }
 
 export async function createUser(
