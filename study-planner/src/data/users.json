@@ -42,5 +42,19 @@
     "division": "Karur Division",
     "circle": "TAMIL NADU",
     "membershipLevel": "free"
+  },
+  {
+    "id": "8dedb1a9-21c9-46b5-8109-03ae10f61204",
+    "email": "gold@gmail.com",
+    "name": "Gold Test",
+    "role": "user",
+    "passwordHash": "$2b$10$Ab21jolLwgojIYRv5SR49OsHPgX.Q.L2ZGwVGaUDNx5iM9TCe7tPa",
+    "createdAt": "2025-12-10T17:17:31.663Z",
+    "mobile": "9966996699",
+    "designation": "PA",
+    "pincode": "639001",
+    "officeName": "Karur H.O",
+    "division": "Karur Division",
+    "circle": "TAMIL NADU"
   }
 ]
