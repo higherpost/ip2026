@@ -16,6 +16,7 @@ export interface User {
     circle?: string;
     passwordHash: string;
     role?: 'user' | 'admin';
+    membershipLevel?: 'free' | 'silver' | 'gold';
     createdAt: string;
 }
 

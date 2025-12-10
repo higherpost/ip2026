@@ -11,6 +11,7 @@ interface UserData {
     name: string;
     email: string;
     role: 'user' | 'admin';
+    membershipLevel?: 'free' | 'silver' | 'gold';
     createdAt: string;
 }
 
@@ -71,7 +72,8 @@ export default function AdminDashboard() {
                     targetEmail: editingUser.email,
                     updates: {
                         name: editingUser.name,
-                        role: editingUser.role
+                        role: editingUser.role,
+                        membershipLevel: editingUser.membershipLevel
                     }
                 })
             });
@@ -161,6 +163,7 @@ export default function AdminDashboard() {
                                 <tr>
                                     <th className="py-3 px-6 text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">User</th>
                                     <th className="py-3 px-6 text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">Role</th>
+                                    <th className="py-3 px-6 text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">Status</th>
                                     <th className="py-3 px-6 text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">Joined</th>
                                     <th className="py-3 px-6 text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider text-right">Actions</th>
                                 </tr>
@@ -175,12 +178,23 @@ export default function AdminDashboard() {
                                             </div>
                                         </td>
                                         <td className="py-4 px-6">
-                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
-                                                ${user.role === 'admin'
-                                                    ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
-                                                    : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                                            <div className="flex flex-col gap-2">
+                                                <span className={`inline-flex items-center w-fit px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
+                                                    ${user.role === 'admin'
+                                                        ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
+                                                        : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                                                    }`}>
+                                                    {user.role}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td className="py-4 px-6">
+                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide
+                                                ${user.membershipLevel === 'gold' ? 'bg-amber-100 text-amber-800 border border-amber-200' :
+                                                    user.membershipLevel === 'silver' ? 'bg-slate-100 text-slate-800 border border-slate-200' :
+                                                        'bg-zinc-100 text-zinc-500 border border-zinc-200'
                                                 }`}>
-                                                {user.role}
+                                                {user.membershipLevel || 'free'}
                                             </span>
                                         </td>
                                         <td className="py-4 px-6 text-sm text-zinc-600 dark:text-zinc-300">
@@ -247,6 +261,18 @@ export default function AdminDashboard() {
                                 >
                                     <option value="user">User</option>
                                     <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Membership Status</label>
+                                <select
+                                    value={editingUser.membershipLevel || 'free'}
+                                    onChange={(e) => setEditingUser({ ...editingUser, membershipLevel: e.target.value as 'free' | 'silver' | 'gold' })}
+                                    className="w-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 capitalize"
+                                >
+                                    <option value="free">Free Member</option>
+                                    <option value="silver">Silver Member</option>
+                                    <option value="gold">Gold Member</option>
                                 </select>
                             </div>
                             <DialogFooter>

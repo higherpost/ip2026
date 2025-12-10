@@ -1,10 +1,10 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 import Image from "next/image";
-import { Check, Smartphone, Mail, MapPin, Phone, ArrowRight, Star, Youtube, Instagram, Twitter, Facebook, MessageCircle, CheckCircle2, BookOpen, Zap, FileText, Layout, Award, Newspaper } from "lucide-react";
-import { redirect } from "next/navigation";
+import { Check, Smartphone, Mail, MapPin, Phone, Lock, Unlock, CheckCircle2, BookOpen, Zap, FileText, Layout, Newspaper, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import HomeHeader from "@/components/HomeHeader";
 import ContactForm from "@/components/ContactForm";
+import { getUserByEmail } from "@/lib/db";
 
 export default async function Home() {
   const cookieStore = await cookies();
@@ -12,18 +12,35 @@ export default async function Home() {
   const userSession = cookieStore.get("user_session");
 
   let displayName = "Aspirant";
+  let membershipLevel = "free";
   const isLoggedIn = !!authToken;
 
   if (isLoggedIn && userSession?.value) {
     try {
-      const userData = JSON.parse(userSession.value);
-      if (userData.name) {
-        displayName = userData.name;
+      const sessionData = JSON.parse(userSession.value);
+      if (sessionData.email) {
+        // Fetch fresh user data to get latest membership status
+        const user = getUserByEmail(sessionData.email);
+        if (user) {
+          displayName = user.name;
+          membershipLevel = user.membershipLevel || "free";
+        } else {
+          // Fallback to session data if DB fetch fails (rare)
+          displayName = sessionData.name || "Aspirant";
+        }
       }
     } catch (e) {
       console.error("Failed to parse user session", e);
     }
   }
+
+  // Helper to check access
+  const hasAccess = (requiredBadge: string) => {
+    if (requiredBadge === "Free") return true;
+    if (requiredBadge === "Silver" && (membershipLevel === "silver" || membershipLevel === "gold")) return true;
+    if (requiredBadge === "Gold" && membershipLevel === "gold") return true;
+    return false;
+  };
 
   return (
     <div className="min-h-screen font-sans bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
@@ -32,8 +49,20 @@ export default async function Home() {
 
       {/* 2. Hero Section */}
       <section className="pt-16 pb-12 text-center px-4">
-        <h1 className="text-3xl md:text-5xl font-extrabold text-blue-600 dark:text-blue-400 mb-4 capitalize">
-          Welcome {displayName}
+        <h1 className="text-3xl md:text-5xl font-extrabold text-blue-600 dark:text-blue-400 mb-4 capitalize flex items-center justify-center gap-3 flex-wrap">
+          <span>Welcome {displayName}</span>
+
+          {/* Membership Badge */}
+          {membershipLevel === 'gold' && (
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 text-amber-900 shadow-lg shadow-amber-500/30 animate-in zoom-in spin-in-3 cursor-default select-none border border-amber-200">
+              <StarIcon className="w-4 h-4 fill-amber-700 text-amber-700" /> Gold Member
+            </span>
+          )}
+          {membershipLevel === 'silver' && (
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-gradient-to-r from-slate-200 via-zinc-300 to-slate-400 text-slate-900 shadow-lg shadow-zinc-500/20 animate-in zoom-in spin-in-3 cursor-default select-none border border-slate-300">
+              <StarIcon className="w-4 h-4 fill-slate-700 text-slate-700" /> Silver Member
+            </span>
+          )}
         </h1>
 
         <p className="text-zinc-600 dark:text-zinc-300 text-xl max-w-3xl mx-auto">
@@ -52,37 +81,63 @@ export default async function Home() {
             { title: "PDF Notes", desc: "Downloadable Content", color: "text-rose-600", bg: "bg-rose-50 dark:bg-rose-900/20", border: "group-hover:border-rose-500", shadow: "group-hover:shadow-rose-500/20", icon: FileText, link: "/notes", badge: "Gold" },
             { title: "Current Affairs", desc: "Daily News & Updates", color: "text-indigo-600", bg: "bg-indigo-50 dark:bg-indigo-900/20", border: "group-hover:border-indigo-500", shadow: "group-hover:shadow-indigo-500/20", icon: Newspaper, link: "/current-affairs", badge: "Free" },
             { title: "Postal Updates", desc: "Circulars & Orders", color: "text-pink-600", bg: "bg-pink-50 dark:bg-pink-900/20", border: "group-hover:border-pink-500", shadow: "group-hover:shadow-pink-500/20", icon: Mail, link: "/postal-updates", badge: "Free" }
-          ].map((item, idx) => (
-            <Link key={idx} href={item.link} className="group relative block w-full aspect-[4/3] sm:aspect-square">
-              <div className={`relative h-full w-full rounded-2xl md:rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 border-b-4 ${item.border} transition-all duration-300 ease-out shadow-sm hover:shadow-xl ${item.shadow} hover:-translate-y-1 overflow-hidden group-hover:border-b-4`}>
-                {/* Badge */}
-                {item.badge && (
-                  <span className={`absolute top-3 right-3 z-20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full shadow-sm ${item.badge === 'Free' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300' :
-                      item.badge === 'Silver' ? 'bg-gradient-to-r from-slate-200 to-zinc-300 text-slate-800 border border-slate-300' :
-                        'bg-gradient-to-r from-amber-200 to-yellow-400 text-amber-900 dark:from-amber-700 dark:to-yellow-600 dark:text-amber-100 border border-amber-300'
-                    }`}>
-                    {item.badge}
-                  </span>
-                )}
+          ].map((item, idx) => {
+            const isUnlocked = hasAccess(item.badge);
 
-                {/* Background decoration */}
-                <div className={`absolute top-0 right-0 w-16 h-16 md:w-24 md:h-24 ${item.bg} rounded-bl-[60px] md:rounded-bl-[100px] opacity-60 transition-transform duration-500 group-hover:scale-150`}></div>
+            return (
+              <Link
+                key={idx}
+                href={isUnlocked ? item.link : "/pricing"}
+                className={`group relative block w-full aspect-[4/3] sm:aspect-square ${!isUnlocked ? 'cursor-not-allowed' : ''}`}
+                onClick={(e) => { if (!isUnlocked) e.preventDefault(); /* Optionally open upgrade modal here */ }}
+              >
+                <div className={`relative h-full w-full rounded-2xl md:rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 border-b-4 ${item.border} transition-all duration-300 ease-out shadow-sm ${isUnlocked ? `hover:shadow-xl ${item.shadow} hover:-translate-y-1` : 'opacity-80 grayscale-[0.5]'} overflow-hidden group-hover:border-b-4`}>
 
-                <div className="relative h-full flex flex-col items-center justify-center p-3 md:p-6 text-center z-10 transition-transform duration-300">
-                  <div className={`mb-2 md:mb-4 p-3 md:p-4 rounded-xl md:rounded-2xl ${item.bg} ${item.color} shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
-                    <item.icon className="w-6 h-6 md:w-8 md:h-8" strokeWidth={2} />
+                  {/* Badge & Lock Icon */}
+                  <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
+                    {/* Lock Status */}
+                    <div className={`p-1.5 rounded-full shadow-sm backdrop-blur-sm ${isUnlocked ? 'bg-green-100/80 text-green-700' : 'bg-zinc-100/80 text-zinc-500'}`}>
+                      {isUnlocked ? <Unlock className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
+                    </div>
+
+                    {item.badge && (
+                      <span className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full shadow-sm ${item.badge === 'Free' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300' :
+                          item.badge === 'Silver' ? 'bg-gradient-to-r from-slate-200 to-zinc-300 text-slate-800 border border-slate-300' :
+                            'bg-gradient-to-r from-amber-200 to-yellow-400 text-amber-900 dark:from-amber-700 dark:to-yellow-600 dark:text-amber-100 border border-amber-300'
+                        }`}>
+                        {item.badge}
+                      </span>
+                    )}
                   </div>
 
-                  <h3 className="text-sm md:text-xl font-bold text-zinc-800 dark:text-zinc-100 mb-1 leading-tight group-hover:text-black dark:group-hover:text-white transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-[10px] md:text-xs font-semibold uppercase tracking-wide text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors hidden sm:block">
-                    {item.desc}
-                  </p>
+                  {/* Background decoration */}
+                  <div className={`absolute top-0 right-0 w-16 h-16 md:w-24 md:h-24 ${item.bg} rounded-bl-[60px] md:rounded-bl-[100px] opacity-60 transition-transform duration-500 group-hover:scale-150`}></div>
+
+                  {/* Content Overlay when Locked */}
+                  {!isUnlocked && (
+                    <div className="absolute inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-[1px] z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="bg-zinc-900 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-xl">
+                        Upgrade to Unlock
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="relative h-full flex flex-col items-center justify-center p-3 md:p-6 text-center z-10 transition-transform duration-300">
+                    <div className={`mb-2 md:mb-4 p-3 md:p-4 rounded-xl md:rounded-2xl ${item.bg} ${item.color} shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                      <item.icon className="w-6 h-6 md:w-8 md:h-8" strokeWidth={2} />
+                    </div>
+
+                    <h3 className="text-sm md:text-xl font-bold text-zinc-800 dark:text-zinc-100 mb-1 leading-tight group-hover:text-black dark:group-hover:text-white transition-colors">
+                      {item.title}
+                    </h3>
+                    <p className="text-[10px] md:text-xs font-semibold uppercase tracking-wide text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors hidden sm:block">
+                      {item.desc}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -257,5 +312,13 @@ export default async function Home() {
         </div>
       </footer>
     </div>
+  );
+}
+
+function StarIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
   );
 }

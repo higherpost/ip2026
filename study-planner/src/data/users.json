@@ -2,9 +2,10 @@
   {
     "id": "e07d45c9-4e63-4d7f-aa22-11c8427c429c",
     "email": "sarunkrr@gmail.com",
-    "name": "Arun S",
+    "name": "Arun Selvaraj",
     "passwordHash": "$2b$10$DWKJHbDGlsb1eXvV75XHpOEfagNUEotDCgOoNonHmp5.Tk.JuoYci",
-    "createdAt": "2025-12-07T16:56:59.221Z"
+    "createdAt": "2025-12-07T16:56:59.221Z",
+    "role": "user"
   },
   {
     "id": "8400a18d-19da-44b8-9fe2-48ff2110e3fa",
@@ -34,6 +35,7 @@
     "pincode": "639104",
     "officeName": "Kulittalai H.O",
     "division": "Karur Division",
-    "circle": "TAMIL NADU"
+    "circle": "TAMIL NADU",
+    "membershipLevel": "gold"
   }
 ]
