@@ -120,14 +120,31 @@ export default function QueriesPage() {
     const [activeTab, setActiveTab] = useState("Home");
     const [questionInput, setQuestionInput] = useState("");
     const [isWriteModalOpen, setIsWriteModalOpen] = useState(false);
+    const [user, setUser] = useState<{ name: string; role?: string } | null>(null);
     const router = useRouter();
 
-    const checkAuthAndExecute = (action: () => void) => {
+    useEffect(() => {
         const match = document.cookie.match(new RegExp('(^| )user_session=([^;]+)'));
         if (match) {
+            try {
+                const decoded = decodeURIComponent(match[2]);
+                setUser(JSON.parse(decoded));
+            } catch (e) {
+                console.error("Failed to parse session", e);
+            }
+        }
+    }, []);
+
+    const checkAuthAndExecute = (action: () => void) => {
+        if (user) {
             action();
         } else {
-            router.push('/login');
+            const match = document.cookie.match(new RegExp('(^| )user_session=([^;]+)'));
+            if (match) {
+                action();
+            } else {
+                router.push('/login');
+            }
         }
     };
 
@@ -179,9 +196,18 @@ export default function QueriesPage() {
                     </div>
 
                     <div className="flex items-center gap-4 text-sm font-medium">
-                        <Link href="/login" className="hidden md:flex items-center gap-1 text-zinc-600 hover:text-blue-600 dark:text-zinc-400 transition-colors">
-                            <User className="w-4 h-4" /> Login
-                        </Link>
+                        {user ? (
+                            <div className="hidden md:flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
+                                <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 flex items-center justify-center font-bold">
+                                    {user.name[0]}
+                                </div>
+                                <span className="font-semibold">{user.name}</span>
+                            </div>
+                        ) : (
+                            <Link href="/login" className="hidden md:flex items-center gap-1 text-zinc-600 hover:text-blue-600 dark:text-zinc-400 transition-colors">
+                                <User className="w-4 h-4" /> Login
+                            </Link>
+                        )}
                         <button
                             onClick={handleAskQuestion}
                             className="bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-lg shadow-orange-500/20 hover:-translate-y-0.5 transform"
@@ -258,19 +284,40 @@ export default function QueriesPage() {
                 {/* Sidebar */}
                 <div className="lg:col-span-4 space-y-6">
 
-                    {/* Login Widget */}
-                    <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 text-center border border-blue-100 dark:border-blue-800/30 transition-shadow hover:shadow-sm">
-                        <h3 className="font-bold text-lg text-zinc-800 dark:text-zinc-100 mb-2">Join the Dak Gyan Community</h3>
-                        <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">Register to get relevant Questions & Discussions on your feed regarding IP Exam 2026.</p>
-                        <div className="flex gap-2 justify-center">
-                            <Link href="/login" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-bold text-sm shadow-lg shadow-blue-500/20 transition-all hover:shadow-blue-500/30 hover:-translate-y-0.5">
-                                Login
-                            </Link>
-                            <Link href="/signup" className="bg-white hover:bg-zinc-50 text-blue-600 border border-blue-200 px-6 py-2 rounded-lg font-bold text-sm transition-all hover:shadow-sm hover:-translate-y-0.5">
-                                Register
-                            </Link>
+                    {/* Login/Welcome Widget */}
+                    {user ? (
+                        <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-6 text-center text-white shadow-lg relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16 blur-2xl"></div>
+                            <div className="relative z-10">
+                                <div className="w-16 h-16 mx-auto bg-white text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mb-3 shadow-md">
+                                    {user.name[0]}
+                                </div>
+                                <h3 className="font-bold text-lg mb-1">Welcome back, {user.name}!</h3>
+                                <p className="text-blue-100 text-sm mb-4">Ready to help the community today?</p>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <button className="bg-white/20 hover:bg-white/30 p-2 rounded-lg text-sm font-medium transition-colors">
+                                        My Questions
+                                    </button>
+                                    <button className="bg-white/20 hover:bg-white/30 p-2 rounded-lg text-sm font-medium transition-colors">
+                                        Saved Answers
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 text-center border border-blue-100 dark:border-blue-800/30 transition-shadow hover:shadow-sm">
+                            <h3 className="font-bold text-lg text-zinc-800 dark:text-zinc-100 mb-2">Join the Dak Gyan Community</h3>
+                            <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">Register to get relevant Questions & Discussions on your feed regarding IP Exam 2026.</p>
+                            <div className="flex gap-2 justify-center">
+                                <Link href="/login" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-bold text-sm shadow-lg shadow-blue-500/20 transition-all hover:shadow-blue-500/30 hover:-translate-y-0.5">
+                                    Login
+                                </Link>
+                                <Link href="/signup" className="bg-white hover:bg-zinc-50 text-blue-600 border border-blue-200 px-6 py-2 rounded-lg font-bold text-sm transition-all hover:shadow-sm hover:-translate-y-0.5">
+                                    Register
+                                </Link>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Web Resources Widget (Replaced Expert Panel) */}
                     <SidebarCard title="Dak Gyan Resources" color="teal">
