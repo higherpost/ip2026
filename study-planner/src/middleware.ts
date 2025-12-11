@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     const isLoginPage = pathname === '/login';
-    const isPublicPath = pathname === '/' || pathname.startsWith('/guide') || pathname.startsWith('/api/auth') || pathname.startsWith('/forgot-password') || pathname.startsWith('/reset-password');
+    const isPublicPath = pathname === '/' || pathname.startsWith('/guide') || pathname.startsWith('/queries') || pathname.startsWith('/api/auth') || pathname.startsWith('/forgot-password') || pathname.startsWith('/reset-password');
 
     // If user is on login page and has a valid token, redirect to planner
     if (isLoginPage && token) {
