@@ -20,7 +20,7 @@ export default function GlobalNavigation() {
                 className="p-1.5 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border border-zinc-200 dark:border-zinc-700 rounded-full hover:border-blue-300 dark:hover:border-blue-700 transition-all shadow-sm group overflow-hidden"
                 title="Back to Home"
             >
-                <Image src="/dak-guru-logo.png" alt="Logo" width={32} height={32} className="rounded-full w-8 h-8 object-cover group-hover:scale-110 transition-transform" />
+                <Image src="/dak-guru-new-logo.png" alt="Logo" width={32} height={32} className="rounded-full w-8 h-8 object-cover group-hover:scale-110 transition-transform" />
             </Link>
 
             <div className="shadow-sm rounded-full">

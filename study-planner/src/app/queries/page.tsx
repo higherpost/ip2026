@@ -8,11 +8,13 @@ import {
     Star,
     BookOpen,
     Layout,
-    FileText
+    FileText,
+    MessageCircle
 } from 'lucide-react';
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { WriteArticleModal } from '@/components/WriteArticleModal';
+import { DMModal } from '@/components/DMModal';
 import { PostItem } from '@/components/PostItem';
 
 // Mock Data for Success Stories
@@ -119,21 +121,59 @@ const SidebarCard = ({ title, children, color = "orange" }: { title: string, chi
 export default function QueriesPage() {
     const [activeTab, setActiveTab] = useState("Home");
     const [questionInput, setQuestionInput] = useState("");
+    const [detailsInput, setDetailsInput] = useState("");
+    const [showDetailsInput, setShowDetailsInput] = useState(false);
+
     const [isWriteModalOpen, setIsWriteModalOpen] = useState(false);
-    const [user, setUser] = useState<{ name: string; role?: string } | null>(null);
+    const [isDMModalOpen, setIsDMModalOpen] = useState(false);
+    const [user, setUser] = useState<{ name: string; role?: string; email?: string } | null>(null);
+
+    // Data State
+    // Data State
+    const [feedData, setFeedData] = useState<any[]>([]);
+    const [savedPostIds, setSavedPostIds] = useState<number[]>([]);
+    const [myQuestionIds, setMyQuestionIds] = useState<number[]>([]);
+
     const router = useRouter();
 
+    const fetchPosts = async () => {
+        try {
+            const res = await fetch('/api/community/posts');
+            if (res.ok) {
+                const data = await res.json();
+                setFeedData(data);
+            }
+        } catch (e) {
+            console.error("Failed to fetch posts", e);
+        }
+    };
+
     useEffect(() => {
+        fetchPosts();
+
         const match = document.cookie.match(new RegExp('(^| )user_session=([^;]+)'));
         if (match) {
             try {
                 const decoded = decodeURIComponent(match[2]);
-                setUser(JSON.parse(decoded));
+                const userData = JSON.parse(decoded);
+                setUser(userData);
+
+                // Identify my questions based on user name (simple check for now)
+                // In a real app, this would be based on user ID from the backend response
             } catch (e) {
                 console.error("Failed to parse session", e);
             }
         }
     }, []);
+
+    // Effect to filtering for "My Questions" - dependent on feedData and user
+    useEffect(() => {
+        if (user && feedData.length > 0) {
+            const myIds = feedData.filter(p => p.author === user.name).map(p => p.id);
+            setMyQuestionIds(myIds);
+        }
+    }, [user, feedData]);
+
 
     const checkAuthAndExecute = (action: () => void) => {
         if (user) {
@@ -149,10 +189,59 @@ export default function QueriesPage() {
     };
 
     const handleAskQuestion = () => {
-        checkAuthAndExecute(() => {
-            // Logic to ask question
-            console.log("Asking question:", questionInput);
+        checkAuthAndExecute(async () => {
+            if (!questionInput.trim()) return;
+
+            const newPost = {
+                id: Date.now(),
+                title: questionInput,
+                author: user?.name || "Aspirant",
+                role: user?.role || "Aspirant",
+                followers: "0",
+                views: "0",
+                answer: null, // No answer yet
+                description: detailsInput,
+                tags: ["New", "Community"],
+                comments: [],
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                const res = await fetch('/api/community/posts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newPost)
+                });
+
+                if (res.ok) {
+                    await fetchPosts();
+                    setQuestionInput("");
+                    setDetailsInput("");
+                    setShowDetailsInput(false);
+                    setActiveTab("Q&A Home");
+                }
+            } catch (e) {
+                console.error("Failed to post question", e);
+            }
         });
+    };
+
+    const handleSavePost = (id: number) => {
+        checkAuthAndExecute(() => {
+            setSavedPostIds(prev =>
+                prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
+            );
+        });
+    };
+
+    const handleDeletePost = (id: number) => {
+        if (confirm("Are you sure you want to delete this question?")) {
+            fetch(`/api/community/posts/${id}`, { method: 'DELETE' })
+                .then(res => {
+                    if (res.ok) fetchPosts();
+                })
+                .catch(e => console.error("Failed to delete", e));
+        }
     };
 
     const handleWriteReview = () => {
@@ -166,10 +255,16 @@ export default function QueriesPage() {
             return SUCCESS_STORIES_DATA;
         }
         if (activeTab === "Unanswered Questions") {
-            return FEED_DATA.filter(post => !post.answer);
+            return feedData.filter(post => !post.answer);
         }
-        // For other tabs ("Q&A Home"), return all feed data
-        return FEED_DATA;
+        if (activeTab === "My Questions") {
+            return feedData.filter(post => myQuestionIds.includes(post.id));
+        }
+        if (activeTab === "Saved Answers") {
+            return feedData.filter(post => savedPostIds.includes(post.id));
+        }
+        // "Q&A Home"
+        return feedData;
     };
 
     return (
@@ -209,10 +304,10 @@ export default function QueriesPage() {
                             </Link>
                         )}
                         <button
-                            onClick={handleAskQuestion}
-                            className="bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-lg shadow-orange-500/20 hover:-translate-y-0.5 transform"
+                            onClick={() => setIsDMModalOpen(true)}
+                            className="bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-lg shadow-orange-500/20 hover:-translate-y-0.5 transform flex items-center gap-2"
                         >
-                            Ask a Question
+                            <MessageCircle className="w-4 h-4" /> DM to Admin
                         </button>
                     </div>
                 </div>
@@ -237,9 +332,23 @@ export default function QueriesPage() {
                             <span className="absolute bottom-3 right-3 text-xs text-zinc-400">{questionInput.length}/140</span>
                         </div>
 
+                        {showDetailsInput && (
+                            <div className="relative mt-4 animate-in fade-in slide-in-from-top-2">
+                                <textarea
+                                    value={detailsInput}
+                                    onChange={(e) => setDetailsInput(e.target.value)}
+                                    className="w-full border border-zinc-300 dark:border-zinc-700 rounded-lg p-4 focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[100px] resize-y bg-zinc-50 dark:bg-zinc-950 text-sm transition-all"
+                                    placeholder="Add more details, context, or specific rules you are referring to..."
+                                />
+                            </div>
+                        )}
+
                         <div className="mt-2 flex items-center justify-between">
-                            <button className="text-blue-600 text-sm font-medium hover:underline flex items-center gap-1 hover:text-blue-700 transition-colors">
-                                <PenSquare className="w-4 h-4" /> Add more details
+                            <button
+                                onClick={() => setShowDetailsInput(!showDetailsInput)}
+                                className="text-blue-600 text-sm font-medium hover:underline flex items-center gap-1 hover:text-blue-700 transition-colors"
+                            >
+                                <PenSquare className="w-4 h-4" /> {showDetailsInput ? "Hide details" : "Add more details"}
                             </button>
                             <button
                                 onClick={handleAskQuestion}
@@ -269,9 +378,25 @@ export default function QueriesPage() {
 
                         <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
                             {/* Simulated Feed Content */}
-                            {getFeedData().map((post) => (
-                                <PostItem key={post.id} post={post} />
-                            ))}
+                            {getFeedData().length > 0 ? (
+                                getFeedData().map((post) => (
+                                    <PostItem
+                                        key={post.id}
+                                        post={post}
+                                        onSave={handleSavePost}
+                                        isSaved={savedPostIds.includes(post.id)}
+                                        currentUser={user}
+                                        onDelete={handleDeletePost}
+                                        onRefresh={fetchPosts}
+                                    />
+                                ))
+                            ) : (
+                                <div className="p-12 text-center text-zinc-500">
+                                    <p>No posts found in this section.</p>
+                                    {activeTab === "My Questions" && <p className="text-sm mt-2">Ask a question to see it here!</p>}
+                                    {activeTab === "Saved Answers" && <p className="text-sm mt-2">Save posts to access them quickly here.</p>}
+                                </div>
+                            )}
 
                             <div className="p-4 text-center">
                                 <button className="text-blue-600 font-bold text-sm hover:underline hover:text-blue-700 transition-colors">View All Questions</button>
@@ -295,10 +420,16 @@ export default function QueriesPage() {
                                 <h3 className="font-bold text-lg mb-1">Welcome back, {user.name}!</h3>
                                 <p className="text-blue-100 text-sm mb-4">Ready to help the community today?</p>
                                 <div className="grid grid-cols-2 gap-3">
-                                    <button className="bg-white/20 hover:bg-white/30 p-2 rounded-lg text-sm font-medium transition-colors">
+                                    <button
+                                        onClick={() => setActiveTab("My Questions")}
+                                        className={`p-2 rounded-lg text-sm font-medium transition-colors ${activeTab === "My Questions" ? "bg-white text-blue-600 font-bold" : "bg-white/20 hover:bg-white/30"}`}
+                                    >
                                         My Questions
                                     </button>
-                                    <button className="bg-white/20 hover:bg-white/30 p-2 rounded-lg text-sm font-medium transition-colors">
+                                    <button
+                                        onClick={() => setActiveTab("Saved Answers")}
+                                        className={`p-2 rounded-lg text-sm font-medium transition-colors ${activeTab === "Saved Answers" ? "bg-white text-blue-600 font-bold" : "bg-white/20 hover:bg-white/30"}`}
+                                    >
                                         Saved Answers
                                     </button>
                                 </div>
@@ -387,6 +518,7 @@ export default function QueriesPage() {
             </div>
 
             <WriteArticleModal isOpen={isWriteModalOpen} onClose={() => setIsWriteModalOpen(false)} />
+            <DMModal isOpen={isDMModalOpen} onClose={() => setIsDMModalOpen(false)} user={user} />
         </div>
     );
 }

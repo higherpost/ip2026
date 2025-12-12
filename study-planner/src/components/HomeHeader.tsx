@@ -51,7 +51,7 @@ export default function HomeHeader({ isLoggedIn, membershipLevel }: { isLoggedIn
                         <div className="flex items-center gap-8">
                             <Link href="/" className="flex items-center gap-2 shrink-0">
                                 <div className="relative w-8 h-8 overflow-hidden rounded">
-                                    <Image src="/dak-guru-logo.png" alt="Dak Guru" fill className="object-cover" />
+                                    <Image src="/dak-guru-new-logo.png" alt="Dak Guru" fill className="object-cover" />
                                 </div>
                                 <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
                                     Dak Guru
