@@ -122,7 +122,7 @@ export const PostItem = ({ post, onSave, isSaved, currentUser, onDelete, onRefre
         setShowCommentsList(!showCommentsList);
     };
 
-    const [likesCount, setLikesCount] = useState(post.likes || 0);
+    const [likesCount, setLikesCount] = useState<number>(post.likes || 0);
     const [hasLiked, setHasLiked] = useState<boolean>(() => {
         if (!currentUser || !post.likedBy) return false;
         return post.likedBy.includes(currentUser.name);
