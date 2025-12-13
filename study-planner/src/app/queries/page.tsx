@@ -521,7 +521,7 @@ export default function QueriesPage() {
                 </div>
             </div>
 
-            <WriteArticleModal isOpen={isWriteModalOpen} onClose={() => setIsWriteModalOpen(false)} />
+            <WriteArticleModal isOpen={isWriteModalOpen} onClose={() => setIsWriteModalOpen(false)} onSuccess={() => { setIsWriteModalOpen(false); fetchPosts(); }} />
             <DMModal isOpen={isDMModalOpen} onClose={() => setIsDMModalOpen(false)} user={user} />
         </div>
     );
