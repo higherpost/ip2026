@@ -92,7 +92,7 @@ export default function Calendar({
                             key={day.toISOString()}
                             onClick={() => onSelectDate(day)}
                             className={cn(
-                                "min-h-[100px] border-t border-r border-zinc-100 dark:border-zinc-800 p-2 relative cursor-pointer transition-all hover:bg-zinc-50 dark:hover:bg-zinc-800/50 group",
+                                "min-h-[60px] md:min-h-[100px] border-t border-r border-zinc-100 dark:border-zinc-800 p-1 md:p-2 relative cursor-pointer transition-all hover:bg-zinc-50 dark:hover:bg-zinc-800/50 group",
                                 "border-[0.5px] border-zinc-100 dark:border-zinc-800",
                                 isSelected && "ring-2 ring-blue-500 dark:ring-blue-400 z-10 bg-blue-50/10 dark:bg-blue-900/10",
                                 !isMonth && "bg-zinc-50/30 dark:bg-zinc-800/20 text-zinc-300 dark:text-zinc-700"
@@ -100,7 +100,7 @@ export default function Calendar({
                         >
                             <div className="flex justify-between items-start mb-1">
                                 <span className={cn(
-                                    "text-xs font-medium block",
+                                    "text-[10px] md:text-xs font-medium block",
                                     isSelected ? "text-blue-600 dark:text-blue-400" : "text-zinc-500 dark:text-zinc-400"
                                 )}>
                                     {format(day, 'd')}
@@ -110,14 +110,14 @@ export default function Calendar({
                                         "rounded-full p-0.5",
                                         confidence === 'low' ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400" : "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
                                     )}>
-                                        {confidence === 'low' ? <AlertCircle className="w-3 h-3" /> : <Check className="w-3 h-3" />}
+                                        {confidence === 'low' ? <AlertCircle className="w-2 h-2 md:w-3 md:h-3" /> : <Check className="w-2 h-2 md:w-3 md:h-3" />}
                                     </div>
                                 )}
                             </div>
 
                             {item && (
                                 <div className={cn(
-                                    "px-1.5 py-1 rounded-sm text-[9px] font-medium leading-tight line-clamp-3 transition-opacity border-l-2",
+                                    "px-1 py-0.5 md:px-1.5 md:py-1 rounded-sm text-[8px] md:text-[9px] font-medium leading-tight line-clamp-2 md:line-clamp-3 transition-opacity border-l-[1.5px] md:border-l-2",
                                     isCompleted && "opacity-60 grayscale-[0.5]",
 
                                     item.type === 'revision' ? "bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 border-orange-400 dark:border-orange-700" :
@@ -132,13 +132,14 @@ export default function Calendar({
                                     isCompleted && confidence === 'high' && "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300 border-emerald-500 dark:border-emerald-600"
 
                                 )}>
-                                    {item.title}
+                                    <span className="hidden md:inline">{item.title}</span>
+                                    <span className="md:hidden">{item.title.substring(0, 15)}{item.title.length > 15 ? '...' : ''}</span>
                                 </div>
                             )}
                         </div>
                     );
                 })}
             </div>
-        </div>
+        </div >
     );
 }

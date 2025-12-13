@@ -25,7 +25,7 @@ export default function TopicSchedule({ plan, progress }: TopicScheduleProps) {
                 <span className="text-zinc-600 dark:text-zinc-400">Full Schedule & Dates</span>
             </h2>
 
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-auto">
                 <table className="w-full text-left border-collapse">
                     <thead className="bg-zinc-50 dark:bg-zinc-800 sticky top-0 z-10 transition-colors">
                         <tr>

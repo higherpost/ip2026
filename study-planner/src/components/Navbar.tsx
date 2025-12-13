@@ -86,9 +86,43 @@ export default function Navbar({ plan, onSelectDate, onMenuClick }: NavbarProps)
                     />
                 </div>
 
-                {/* Search Results Dropdown */}
-                {showResults && results.length > 0 && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-zinc-900 rounded-xl shadow-xl border border-zinc-100 dark:border-zinc-800 max-h-[400px] overflow-y-auto z-[100] p-2">
+                {/* Mobile Search Toggle */}
+                <div className="md:hidden ml-auto mr-4 relative">
+                    <button onClick={() => setShowResults(!showResults)} className="p-2 text-zinc-500 hover:bg-zinc-100 rounded-lg">
+                        <Search className="w-5 h-5" />
+                    </button>
+                    {showResults && (
+                        <div className="absolute top-full right-0 mt-2 w-72 bg-white dark:bg-zinc-900 rounded-xl shadow-xl border border-zinc-100 dark:border-zinc-800 p-2 z-[100]">
+                            <input
+                                type="text"
+                                autoFocus
+                                value={query}
+                                placeholder="Search..."
+                                className="w-full px-4 py-2 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm mb-2"
+                                onChange={handleInput}
+                            />
+                            {results.length > 0 && (
+                                <div className="max-h-[300px] overflow-y-auto space-y-1">
+                                    {results.map((item, idx) => (
+                                        <button
+                                            key={idx}
+                                            onClick={() => handleResultClick(item)}
+                                            className="w-full text-left p-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg text-sm truncate"
+                                        >
+                                            {item.title}
+                                            <span className="block text-[10px] text-zinc-400">{item.date}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+
+                {/* Search Results Dropdown (Desktop) */}
+                {/* Search Results Dropdown (Desktop) */}
+                {showResults && results.length > 0 && query.length > 0 && (
+                    <div className="hidden md:block absolute top-full left-0 right-0 mt-2 bg-white dark:bg-zinc-900 rounded-xl shadow-xl border border-zinc-100 dark:border-zinc-800 max-h-[400px] overflow-y-auto z-[100] p-2">
                         <div className="px-3 py-2 text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider sticky top-0 bg-white dark:bg-zinc-900">
                             Found {results.length} Study Slots
                         </div>
@@ -123,6 +157,6 @@ export default function Navbar({ plan, onSelectDate, onMenuClick }: NavbarProps)
                 </Link>
                 <UserMenu />
             </div>
-        </nav>
+        </nav >
     );
 }

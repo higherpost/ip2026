@@ -120,7 +120,7 @@ export default function PlannerPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-3 gap-6 h-auto lg:h-full">
                         {/* Center Panel: Calendar/Tracker */}
                         <div className="xl:col-span-2 h-auto xl:h-full overflow-hidden rounded-xl flex flex-col">
-                            <div className="flex-1 overflow-y-auto h-full min-h-[500px]">
+                            <div className="flex-1 overflow-y-auto h-full min-h-[350px] md:min-h-[500px]">
                                 {activeTab === 'calendar' && (
                                     <Calendar
                                         plan={plan}
